@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --bg-color: #fce4ec;
+  --envelope-color: #d81b60;
+  --envelope-dark: #ad1457;
+  --letter-bg: #fffbf0;
+  --text-primary: #3e2723;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Lora', serif;
+  overflow: hidden; /* Mencegah scroll bocor di mobile */
+  touch-action: manipulation;
+}
+
+.app-container {
+  min-height: 100dvh; /* Menggunakan dvh untuk iOS/Android URL bar fix */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* ENVELOPE ARCHITECTURE */
+.envelope-wrapper {
+  position: relative;
+  width: 90vw;
+  max-width: 400px;
+  height: 250px;
+  z-index: 10;
+}
+
+.envelope {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--envelope-color);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+/* Flap (Tutup Amplop) */
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--envelope-dark);
+  clip-path: polygon(0 0, 50% 50%, 100% 0);
+  transform-origin: top;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 4;
+}
+
+.envelope.open .flap {
+  transform: rotateX(180deg);
+  z-index: 1; /* Pindah ke belakang saat terbuka */
+}
+
+/* Pocket (Bagian depan bawah) */
+.pocket {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--envelope-color);
+  clip-path: polygon(0 100%, 50% 40%, 100% 100%, 100% 100%, 0 100%);
+  z-index: 3;
+  border-radius: 0 0 10px 10px;
+}
+
+/* Tap Instruction */
+.tap-instruction {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 5;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.8rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+
+.tap-instruction span {
+  font-family: 'Lora', serif;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.heart-icon {
+  color: #ff4081;
+  vertical-align: middle;
+}
+
+/* LETTER ARCHITECTURE */
+.letter {
+  position: absolute;
+  top: 10px;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  background-color: var(--letter-bg);
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 2;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+}
+
+.envelope.open .letter {
+  /* Naik dan membesar sedikit di mobile */
+  transform: translateY(-80px) scale(1.05);
+  height: 60vh; /* Mengekspansi tinggi saat keluar */
+  z-index: 5; /* Pindah ke depan saku */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.letter-content {
+  padding: 20px;
+  color: var(--text-primary);
+  opacity: 0;
+  transition: opacity 0.5s ease 0.4s;
+}
+
+.envelope.open .letter-content {
+  opacity: 1;
+}
+
+/* Photo Styling */
+.photo-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.naila-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transform: rotate(-3deg);
+}
+
+.photo-caption {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2rem;
+  color: #795548;
+  margin-top: 5px;
+}
+
+.letter-content h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2rem;
+  color: var(--envelope-dark);
+  margin-bottom: 15px;
+}
+
+.letter-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  text-align: justify;
+}
+
+.signature {
+  margin-top: 20px;
+  text-align: right;
+  font-style: italic;
+}
+
+/* NOTES ARCHITECTURE */
+.btn-notes {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background-color: var(--envelope-color);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(216, 27, 96, 0.3);
+  transition: transform 0.2s;
+}
+
+.btn-notes:active {
+  transform: scale(0.95);
+}
+
+.floating-notes-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.note {
+  background-color: #fff9c4;
+  padding: 20px;
+  width: 80vw;
+  max-width: 300px;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+  position: relative;
+}
+
+/* Sticky tape effect */
+.note::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-close {
+  margin-top: 30px;
+  padding: 10px 20px;
+  background: white;
+  color: var(--envelope-dark);
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
